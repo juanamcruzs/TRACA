@@ -1,0 +1,21 @@
+import subprocess
+
+# Define your file paths
+reference_genome = "pJRP0259 [pcapture_v11_mu].fasta"
+raw_reads = "/Users/juanacruz/Downloads/p259_circ_col.2_barcode41.fastq"
+output_bam = "alignment.bam"
+
+# Run Minimap2 command to produce BAM file
+minimap2_command = f"minimap2 -ax map-ont {reference_genome} {raw_reads} | samtools view -Sb - > {output_bam}"
+subprocess.run(minimap2_command, shell=True, check=True)
+
+# Sort BAM file
+sorted_bam = output_bam.replace('.bam', '.sorted.bam')
+sort_command = f"samtools sort {output_bam} -o {sorted_bam}"
+subprocess.run(sort_command, shell=True, check=True)
+
+# Index BAM file
+index_command = f"samtools index {sorted_bam}"
+subprocess.run(index_command, shell=True, check=True)
+
+print(f"Alignment completed. BAM file is available at {sorted_bam}")
