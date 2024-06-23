@@ -1,0 +1,12 @@
+
+# Sort the BAM file (if not already sorted)
+samtools sort circ_col.2.bam -o circ_col.2_sorted.bam
+
+# Index the BAM file
+samtools index circ_col.2_sorted.bam
+
+# Generate read counts for each reference sequence
+samtools idxstats circ_col.2_sorted.bam > idxstats1.txt
+
+# Identify the most abundant plasmid
+awk 'BEGIN {max = 0} {if ($3 > max) {max = $3; ref = $1}} END {print "Most abundant plasmid: " ref ", Read count: " max}' idxstats1.txt
