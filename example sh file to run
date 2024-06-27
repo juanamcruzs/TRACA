@@ -1,0 +1,21 @@
+#!/bin/bash
+
+#name of sample
+sample_id="A2"
+output_dir_prefix="metaspades_output"
+fastq_suffix="_trimmed.fastq.gz"
+
+contig_file="./${output_dir_prefix}_${sample_id}/contigs.fasta"
+
+#run bbmap
+/shared/software/bbmap/latest/bbmap.sh ref=$contig_file 
+in1="./${sample_id}_R1${fastq_suffix}" 
+in2="./${sample_id}_R2${fastq_suffix}" threads=16 nodisk 
+out="./${output_dir_prefix}_${sample_id}/mapping.sam"
+
+samtools view -bS 
+"./${output_dir_prefix}_${sample_id}/mapping.sam" > 
+"./${output_dir_prefix}_${sample_id}/mapping.bam"
+samtools sort -o 
+"./${output_dir_prefix}_${sample_id}/mapping_sorted.bam" 
+"./${output_dir_prefix}_${sample_id}/mapping.bam"
